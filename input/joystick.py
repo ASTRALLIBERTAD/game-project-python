@@ -29,9 +29,9 @@ class Joystick:
             pos = pygame.Vector2(event.pos)
             if (pos - self.center).length() <= self.radius:
                 self.dragging = True
-            elif event.type == pygame.MOUSEBUTTONUP:
-                self.dragging = False
-                self.stick_pos = self.center.copy()
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.dragging = False
+            self.stick_pos = self.center.copy()
 
 
     def update_drag_state(self):
