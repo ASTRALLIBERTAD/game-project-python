@@ -2,8 +2,6 @@ import pygame
 from scene_manager import SceneManager
 
 
-
-
 class Game:
     def __init__(self):
         pygame.init()
@@ -28,6 +26,5 @@ class Game:
             self.scenes.draw()
             pygame.display.flip()
             self.clock.tick(60)
-
 
         pygame.quit()

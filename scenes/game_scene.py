@@ -23,6 +23,14 @@ class GameScene:
         # Player & world
         self.player = Player(screen)
         self.collision = Collider(self.player.rect.x, self.player.rect.y, self.player.rect.width, self.player.rect.height)
+        
+        # Keyboard state tracking
+        self.keys_pressed = {
+            'w': False,
+            'a': False,
+            's': False,
+            'd': False
+        }
 
     def handle_event(self, event):
         # propagate events to UI elements
@@ -31,9 +39,35 @@ class GameScene:
         self.jump_btn.handle_event(event)
         self.interact_btn.handle_event(event)
 
-        # scene change (pause)
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.manager.change_scene("pause")
+        # WASD keyboard events
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                self.keys_pressed['w'] = True
+            elif event.key == pygame.K_a:
+                self.keys_pressed['a'] = True
+            elif event.key == pygame.K_s:
+                self.keys_pressed['s'] = True
+            elif event.key == pygame.K_d:
+                self.keys_pressed['d'] = True
+            elif event.key == pygame.K_SPACE:
+                # Jump on space press
+                self.player.velocity.y -= 8
+            elif event.key == pygame.K_e:
+                # Interact on E press
+                print("Interact pressed")
+            elif event.key == pygame.K_ESCAPE:
+                # Pause game
+                self.manager.change_scene("pause")
+        
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                self.keys_pressed['w'] = False
+            elif event.key == pygame.K_a:
+                self.keys_pressed['a'] = False
+            elif event.key == pygame.K_s:
+                self.keys_pressed['s'] = False
+            elif event.key == pygame.K_d:
+                self.keys_pressed['d'] = False
 
         # resize -> update layouts
         if event.type == pygame.VIDEORESIZE or event.type == pygame.WINDOWSIZECHANGED:
@@ -43,12 +77,40 @@ class GameScene:
             self.jump_btn.pos = (self.screen.get_width() - 90, self.screen.get_height() - 140)
             self.interact_btn.pos = (self.screen.get_width() - 90, self.screen.get_height() - 60)
 
+    def get_keyboard_direction(self):
+        """Calculate direction vector from currently pressed WASD keys"""
+        direction = pygame.Vector2(0, 0)
+        
+        if self.keys_pressed['w']:
+            direction.y -= 1
+        if self.keys_pressed['s']:
+            direction.y += 1
+        if self.keys_pressed['a']:
+            direction.x -= 1
+        if self.keys_pressed['d']:
+            direction.x += 1
+        
+        # Normalize diagonal movement
+        if direction.length() > 0:
+            direction = direction.normalize()
+        
+        return direction
+
     def update(self):
         # update joystick dragging positions using current mouse/touch pos
         self.move_joy.update_drag_state()
         self.aim_joy.update_drag_state()
 
-        move_dir = self.move_joy.get_direction()
+        # Get input from both joystick and keyboard
+        joy_move_dir = self.move_joy.get_direction()
+        keyboard_dir = self.get_keyboard_direction()
+        
+        # Combine joystick and keyboard input (keyboard takes priority if both used)
+        if keyboard_dir.length() > 0:
+            move_dir = keyboard_dir
+        else:
+            move_dir = joy_move_dir
+        
         aim_dir = self.aim_joy.get_direction()
 
         # jump pressed

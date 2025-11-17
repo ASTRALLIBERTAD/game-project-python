@@ -38,13 +38,21 @@ class Joystick:
         if self.dragging:
             pos = pygame.Vector2(pygame.mouse.get_pos())
             offset = pos - self.center
+            
+            # Update stick position for any movement within the radius
             if offset.length() > self.radius:
+                # Clamp to radius if beyond
                 offset.scale_to_length(self.radius)
-                self.stick_pos = self.center + offset
+            
+            # Always update stick_pos when dragging
+            self.stick_pos = self.center + offset
 
 
     def get_direction(self):
-        return (self.stick_pos - self.center) / self.radius
+        offset = self.stick_pos - self.center
+        if offset.length() > 0:
+            return offset / self.radius
+        return pygame.Vector2(0, 0)
 
 
     def draw(self, screen):

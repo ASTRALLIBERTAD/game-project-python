@@ -12,12 +12,13 @@ class MenuScene:
         w, h = screen.get_size()
         self.start_btn = Button(screen, "Start", (w // 2, h // 2 - 40), 200, 60)
         self.quit_btn = Button(screen, "Quit", (w // 2, h // 2 + 40), 200, 60)
+        self.print_btn = Button(screen, "Print", (w // 2, h // 2 + 100), 200, 60)
 
 
     def handle_event(self, event):
         self.start_btn.handle_event(event)
         self.quit_btn.handle_event(event)
-
+        self.print_btn.handle_event(event)
 
         if self.start_btn.clicked:
             self.start_btn.clicked = False
@@ -27,6 +28,10 @@ class MenuScene:
         if self.quit_btn.clicked:
             self.quit_btn.clicked = False
             pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+        if self.print_btn.clicked:
+            self.print_btn.clicked = False
+            print("gayyy")
 
 
         # handle resize
@@ -44,3 +49,4 @@ class MenuScene:
         self.screen.fill((18, 18, 20))
         self.start_btn.draw(self.screen)
         self.quit_btn.draw(self.screen)
+        self.print_btn.draw(self.screen)

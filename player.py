@@ -11,11 +11,23 @@ class Player:
         self.gravity = 0.3
 
     def apply_input(self, move_dir, aim_dir):
-        # Apply movement input
+
         if move_dir.length() > 0:
             move_dir = move_dir.normalize()
+        
+        # Direct velocity control (no momentum)
         self.velocity.x = move_dir.x * self.base_speed
-        self.velocity.y += self.gravity  # Apply gravity
+        self.velocity.y = move_dir.y * self.base_speed
+
+
+        # Apply movement input for gravity-affected y
+        # if move_dir.length() > 0:
+        #     move_dir = move_dir.normalize()
+        # self.velocity.x = move_dir.x * self.base_speed
+
+
+
+        # self.velocity.y += self.gravity  # Apply gravity
 
     def update_physics(self):
         # Update position based on velocity
