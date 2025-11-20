@@ -1,5 +1,5 @@
 import pygame
-from scene_manager import SceneManager
+from scene_manager import DungeonSceneManager
 
 
 class Game:
@@ -11,7 +11,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         # Scene manager holds current scene
-        self.scenes = SceneManager(self.screen)
+        self.scenes = DungeonSceneManager(self.screen)
 
     def run(self):
         while self.running:

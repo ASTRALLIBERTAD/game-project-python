@@ -31,6 +31,7 @@ class MenuScene:
 
         if self.print_btn.clicked:
             self.print_btn.clicked = False
+            self.manager.change_scene("role_select")
             print("gayyy")
 
 
